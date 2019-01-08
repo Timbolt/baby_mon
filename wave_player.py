@@ -8,9 +8,9 @@ def play_wav(wait_time, loud=False):
 
     # open the file for reading.
     if loud:
-        wf = wave.open('rooster-15.wav', 'rb')
+        wf = wave.open('/home/pi/Desktop/baby_mon/rooster-15.wav', 'rb')
     else:
-        wf = wave.open('rooster-36.wav', 'rb')
+        wf = wave.open('/home/pi/Desktop/baby_mon/rooster-36.wav', 'rb')
 
     # create an audio object
     p = pyaudio.PyAudio()
@@ -21,7 +21,7 @@ def play_wav(wait_time, loud=False):
                     channels = wf.getnchannels(),
                     rate = wf.getframerate(),
                     output = True,
-                    output_device_index=3)
+                    output_device_index=0)
 
     # read data (based on the chunk size)
     data = wf.readframes(chunk)

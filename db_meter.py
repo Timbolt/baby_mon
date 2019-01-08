@@ -3,13 +3,22 @@ import wave
 import audioop
 import datetime, time
 import wave_player
-import speech_recognition as sr
+import time
+#import speech_recognition as sr
+
+# tell me that it is running
+time.sleep(10)
+f = open("/home/pi/Desktop/test2.txt", "w")
+f.write("teeesting")
+f.close()
+wave_player.play_wav(1)
+
 
 CHUNK = 1024
 FORMAT = pyaudio.paInt16
 CHANNELS = 2
 RATE = 44100
-RECORD_SECONDS = 20
+RECORD_SECONDS = 30
 WAVE_OUTPUT_FILENAME = "output.wav"
 
 p = pyaudio.PyAudio()
@@ -19,7 +28,7 @@ stream = p.open(format=FORMAT,
             rate=RATE,
             input=True,
             frames_per_buffer=CHUNK,
-            input_device_index=0)
+            input_device_index=2)
 
 
 frames = []
@@ -53,7 +62,7 @@ for i in range(0, int(RATE / CHUNK * RECORD_SECONDS)):
                 start_time = time.time()
 
     # small trigger
-    if max_v>100 and max_v <1500:
+    if max_v>300 and max_v <1500:
         current_time = time.time()
         if current_time - start_time > wait_time:
             wave_player.play_wav(wait_time)
@@ -62,14 +71,17 @@ for i in range(0, int(RATE / CHUNK * RECORD_SECONDS)):
 
     if new_run:
         time_id = datetime.datetime.now()
-        f = open("sound_tracking/st_{}.csv".format(time_id), "w")
+        f = open("/home/pi/Desktop/baby_mon/sound_tracking/st_{}.csv".format(time_id), "w")
         f.write('sound_level, date, time \n')
         new_run = False
     else:
-        f = open("sound_tracking/st_{}.csv".format(time_id), "a+")
+        f = open("/home/pi/Desktop/baby_mon/sound_tracking/st_{}.csv".format(time_id), "a+")
         f.write('{},{},{} \n'.format(str(max_v), str(datetime.datetime.now().date()), str(datetime.datetime.now().time())))
 
 
 stream.stop_stream()
 stream.close()
 p.terminate()
+
+# tell me it is over
+wave_player.play_wav(1)
